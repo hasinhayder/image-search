@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Search using AlpineJS</title>
+    <link rel="icon" href="//img.icons8.com/dusk/344/search--v1.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&text=ImageSearch" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    
+  </head>
+
+  <body>
+    <div class="info" x-data="searchModule" x-init="">
+      <h1>Image Search</h1>
+      <div class="search">
+        <input @keydown.enter="getImages()" type="text" x-model="searchkey" placeholder="Type keyword and hit enter">
+        <button @click='getImages()'>Search</button>
+      </div>
+      <div class="search-result">
+        <template x-for="image in images">
+          <a :href='image.pageURL' target='_blank'>
+            <img :src="image.webformatURL" :title="image.tags" loading=lazy/>
+          </a>
+        </template>
+      </div>
+    </div>
+  </body>
+  <script src="//cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js" defer></script>
+
+  <script>
+    const searchModule = {
+      apiKey: '1984111-80063ba8cb2e514a8b70d062c',
+      apiUrl: 'https://pixabay.com/api/?image_type=photo&orientation=horizontal&per_page=50',
+      searchkey: '',
+      images:[],
+      getImages(){
+        this.images=[];
+        const requestUrl = `${this.apiUrl}&q=${this.searchkey}&key=${this.apiKey}`
+        fetch(requestUrl)
+        .then(res=>res.json())
+        .then(data=>{
+          this.images = data.hits
+        })
+      }
+    }
+  </script>
+</html>
