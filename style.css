@@ -11,7 +11,11 @@ h1{
   align-items: center;
   justify-content: center;
   margin-top:70px;
-  margin-bottom:200px;
+  margin-bottom: 80px;
+}
+
+.search > div {
+  position: relative;
 }
 
 .search p{
@@ -21,9 +25,17 @@ h1{
 
 .search input{
   font-size:24px;
-  padding:10px 20px;
-  width:400px;
+  padding:10px 20px 10px 40px;
+  width:  700px;
   border:1px solid #bbb;
+  box-sizing: border-box;
+}
+
+.search .search-icon {
+  position: absolute;
+  left: 10px;
+  top: 13px;
+  max-width: 25px;
 }
 
 .search input::placeholder{
@@ -47,11 +59,27 @@ h1{
   grid-auto-rows: 1fr;
   column-gap: 5px;
   row-gap: 1px;
-  width:1600px;
+  max-width: 1600px;
+  width: 100%;
 }
 
 .search-result img{
   width:100%;
   height: 353px;
   object-fit: cover;
+}
+.is-loading,
+.no-results {
+  grid-template-columns: repeat(1,1fr);
+}
+
+.is-loading .loader,
+.no-results .no-results-found {
+  text-align: center;
+  color: red;
+  font-size: 20px;
+}
+
+.is-loading .loader {
+  color: gray;
 }

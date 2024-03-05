@@ -18,12 +18,21 @@
     <h1>Image Search</h1>
     <div class="search">
       <div>
-        <input @keydown.enter="getImages()" type="text" x-model="searchkey" placeholder="Type keyword and hit enter">
+        <input @keydown.enter="getImages()" @blur="getImages()" type="text" x-model="searchkey" placeholder="Type keyword and press Enter, or click outside to search">
+        <img src="//img.icons8.com/dusk/344/search--v1.png" class="search-icon" alt="">
         <button @click='getImages()'>Search</button>
         <p>* powered by pixabay</p>
       </div>
     </div>
-    <div class="search-result">
+    <div class="search-result" x-bind:class="{ 'no-results': noResultsFound, 'is-loading': isLoading }">
+      <template x-if="isLoading">
+        <p class="loader">Loading...</p>
+      </template>
+
+      <template x-if="noResultsFound">
+        <p class="no-results-found">No results found.</p>
+      </template>
+
       <template x-for="image in images">
         <a :href='image.pageURL' target='_blank'>
           <img :src="image.webformatURL" :title="image.tags" loading=lazy />
@@ -40,13 +49,22 @@
     apiUrl: 'https://pixabay.com/api/?image_type=photo&orientation=horizontal&per_page=50',
     searchkey: '',
     images: [],
+    noResultsFound: false,
+    isLoading: false,
     getImages() {
       this.images = [];
+      this.noResultsFound = false;
+      this.isLoading = true;
       const requestUrl = `${this.apiUrl}&q=${this.searchkey}&key=${this.apiKey}`
       fetch(requestUrl)
         .then(res => res.json())
         .then(data => {
-          this.images = data.hits
+          this.isLoading = false;
+          if (data.hits.length === 0) {
+            this.noResultsFound = true;
+          } else {
+            this.images = data.hits;
+          }
         })
     }
   }
